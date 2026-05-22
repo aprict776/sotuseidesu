@@ -456,4 +456,4 @@
 
 ### 画面遷移図 Figma：<https://www.figma.com/design/88ESsY0mj7oWQd8iFH8j29/%E3%83%A1%E3%83%A2%E3%83%83%E3%83%88%E3%82%AF%E3%80%80%E7%94%BB%E9%9D%A2%E9%81%B7%E7%A7%BB%E5%9B%B3?node-id=0-1&t=FG9lgBpe149TQHLW-1>
 
-### ER図 https://gyazo.com/76315ffe42d918ac588b79d89a0ae535
+### ER図 https://gyazo.com/0086cf90e8846f30b5559baee9f9a8e6
