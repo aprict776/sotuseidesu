@@ -11,19 +11,31 @@
 
     <%= yield :head %>
 
-    <%# Enable PWA manifest for installable apps (make sure to enable in config/routes.rb too!) %>
-    <%#= tag.link rel: "manifest", href: pwa_manifest_path(format: :json) %>
-
     <link rel="icon" href="/icon.png" type="image/png">
     <link rel="icon" href="/icon.svg" type="image/svg+xml">
     <link rel="apple-touch-icon" href="/icon.png">
 
-    <%# Includes all stylesheet files in app/assets/stylesheets %>
     <%= stylesheet_link_tag :app, "data-turbo-track": "reload" %>
     <%= javascript_include_tag "application", "data-turbo-track": "reload", type: "module" %>
   </head>
 
   <body>
+    <% if user_signed_in? %>
+      <header class="bg-gray-700 text-white px-6 py-3 flex justify-between items-center">
+        <span><%= current_user.name %></span>
+        <%= link_to "ログアウト", destroy_user_session_path,
+            data: { turbo_method: :delete },
+            class: "text-sm bg-gray-500 px-3 py-1 rounded" %>
+      </header>
+    <% end %>
+
+    <% if notice %>
+      <p class="text-green-600 text-center py-2"><%= notice %></p>
+    <% end %>
+    <% if alert %>
+      <p class="text-red-600 text-center py-2"><%= alert %></p>
+    <% end %>
+
     <%= yield %>
   </body>
 </html>
