@@ -1,0 +1,27 @@
+<div class="flex h-screen">
+  <%# メモ投稿・一覧エリア %>
+  <div class="flex-1 flex flex-col p-6 overflow-y-auto">
+
+    <%# メモ投稿フォーム %>
+    <%= form_with model: @memo, url: memos_path do |f| %>
+      <div class="mb-4">
+        <%= f.text_area :content, rows: 4,
+            placeholder: "アイデアをメモしよう...",
+            class: "w-full px-4 py-3 rounded-lg bg-stone-100 resize-none" %>
+      </div>
+      <div class="flex justify-end">
+        <%= f.submit "メモる", class: "bg-gray-700 text-white px-6 py-2 rounded-full cursor-pointer" %>
+      </div>
+    <% end %>
+
+    <%# メモ一覧 %>
+      <div class="mt-6 flex flex-col gap-4">
+      <% @memos.each do |memo| %>
+    <div class="bg-stone-100 rounded-lg p-4">
+      <p class="whitespace-pre-wrap"><%= memo.content %></p>
+        </div>
+      <% end %>
+    </div>
+
+  </div>
+</div>

@@ -10,7 +10,7 @@ class ApplicationController < ActionController::Base
   end
 
   def after_sign_in_path_for(resource)
-    root_path
+    memos_path  # root_path から変更
   end
 
   def after_sign_out_path_for(resource_or_scope)
