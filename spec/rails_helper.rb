@@ -36,7 +36,7 @@ rescue ActiveRecord::PendingMigrationError => e
 end
 
 RSpec.configure do |config|
-  config.include FactoryBot::Syntax::Methods 
+  config.include FactoryBot::Syntax::Methods
   config.include Devise::Test::IntegrationHelpers, type: :request # Deviseのテストヘルパーをリクエストスペックで使用できるようにする設定。type: :requestは、RSpecがこの設定をコントローラーのテストにのみ適用することを指定する。
   # Remove this line if you're not using ActiveRecord or ActiveRecord fixtures
   config.fixture_paths = [
