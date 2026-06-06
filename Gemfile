@@ -22,11 +22,18 @@ gem "jbuilder"
 # ユーザー登録機能Gem
 gem "devise"
 
-
 # ページネーション
 gem "kaminari", "~> 1.2.1"
 
 gem "config", "4.0.0"
+
+# テストファイル
+
+group :development, :test do # 本番環境にテストファイルをインストールされないようにするための指示
+  gem "rspec-rails" # テストを書くためのフレームワーク
+  gem "factory_bot_rails" # テスト用のデータを簡単に作れるgem
+  gem "faker" # ダミーデータを自動生成してくれるgem
+end
 
 # Use Active Model has_secure_password [https://guides.rubyonrails.org/active_model_basics.html#securepassword]
 # gem "bcrypt", "~> 3.1.7"

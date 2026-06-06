@@ -25,6 +25,19 @@ class MemosController < ApplicationController
     end
   end
 
+
+  def edit
+  end
+
+  def update
+    if @memo.update(memo_params)
+      redirect_to memos_path, notice: "メモを更新しました"
+    else
+      render :edit, status: :unprocessable_entity
+    end
+  end
+
+
   def destroy
     @memo.destroy
     redirect_to memos_path, notice: "メモを削除しました"

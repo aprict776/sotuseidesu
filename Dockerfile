@@ -89,3 +89,12 @@ ENTRYPOINT ["/rails/bin/docker-entrypoint"]
 # Start server via Thruster by default, this can be overwritten at runtime
 EXPOSE 80
 CMD ["./bin/thrust", "./bin/rails", "server"]
+
+FROM ruby:4.0.5
+
+WORKDIR /app
+
+COPY Gemfile ./
+RUN bundle install
+
+CMD ["bundle", "exec", "rspec", "--format", "documentation"]
