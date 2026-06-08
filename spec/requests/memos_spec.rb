@@ -1,10 +1,11 @@
 require "rails_helper"
-  RSpec.describe "Memos", type: :request do
-    let(:user) { create(:user) } # テスト用のユーザーを作成
 
-    before do # テストの前にログイン状態にする処理
-      sign_in user
-    end
+RSpec.describe "Memos", type: :request do
+  let(:user) { create(:user) }
+
+  before do
+    sign_in user
+  end
 
   describe "GET /memos" do
     it "正常にレスポンスを返す" do
@@ -24,13 +25,13 @@ require "rails_helper"
       get memos_path
       expect(response.body).not_to include(other_memo.content)
     end
-
+  end
 
   describe "POST /memos" do
     it "メモを作成できる" do
       expect {
         post memos_path, params: { memo: { content: "テストメモ" } }
-      }.to change(Memo, :count).by(1)  # メモの数が1増えることを確認
+      }.to change(Memo, :count).by(1)
     end
 
     it "空のメモは作成できない" do
@@ -56,7 +57,7 @@ require "rails_helper"
       }.not_to change(Memo, :count)
     end
   end
-      
+
   describe "GET /memos/:id/edit" do
     it "自分のメモの編集画面を表示できる" do
       memo = create(:memo, user: user)
@@ -93,4 +94,3 @@ require "rails_helper"
     end
   end
 end
-end 
