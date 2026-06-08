@@ -1,11 +1,10 @@
 require "rails_helper"
+  RSpec.describe "Memos", type: :request do
+    let(:user) { create(:user) } # テスト用のユーザーを作成
 
-RSpec.describe "Memos", type: :request do
-  let(:user) { create(:user) } # テスト用のユーザーを作成
-
-  before do # テストの前にログイン状態にする処理
-    sign_in user
-  end
+    before do # テストの前にログイン状態にする処理
+      sign_in user
+    end
 
   describe "GET /memos" do
     it "正常にレスポンスを返す" do
@@ -25,7 +24,7 @@ RSpec.describe "Memos", type: :request do
       get memos_path
       expect(response.body).not_to include(other_memo.content)
     end
-  end
+
 
   describe "POST /memos" do
     it "メモを作成できる" do
@@ -48,7 +47,6 @@ RSpec.describe "Memos", type: :request do
         delete memo_path(memo)
       }.to change(Memo, :count).by(-1)
     end
-  end
 
     it "他のユーザーのメモは削除できない" do
       other_user = create(:user)
@@ -65,7 +63,6 @@ RSpec.describe "Memos", type: :request do
       get edit_memo_path(memo)
       expect(response).to have_http_status(:ok)
     end
-  end
 
     it "他のユーザーのメモの編集画面は表示できない" do
       other_user = create(:user)
@@ -96,3 +93,4 @@ RSpec.describe "Memos", type: :request do
     end
   end
 end
+end 
