@@ -1,5 +1,5 @@
 class MemosController < ApplicationController
-  before_action :set_memo, only: [ :update, :destroy ]
+  before_action :set_memo, only: [ :edit, :update, :destroy ]
 
   def index
     @memos = current_user.memos.order(created_at: :desc)
