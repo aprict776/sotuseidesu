@@ -56,6 +56,9 @@ RSpec.describe "Memos", type: :request do
       expect {
         delete memo_path(other_memo)
       }.not_to change(Memo, :count)
+    end
+  end
+      
   describe "GET /memos/:id/edit" do
     it "自分のメモの編集画面を表示できる" do
       memo = create(:memo, user: user)
