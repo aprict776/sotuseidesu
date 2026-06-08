@@ -31,7 +31,6 @@ RSpec.describe "Memos", type: :request do
     it "メモを作成できる" do
       expect {
         post memos_path, params: { memo: { content: "テストメモ" } }
-
       }.to change(Memo, :count).by(1)  # メモの数が1増えることを確認
     end
 
