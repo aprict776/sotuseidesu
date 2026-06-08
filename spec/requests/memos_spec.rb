@@ -48,6 +48,7 @@ RSpec.describe "Memos", type: :request do
         delete memo_path(memo)
       }.to change(Memo, :count).by(-1)
     end
+  end
 
     it "他のユーザーのメモは削除できない" do
       other_user = create(:user)
@@ -61,6 +62,7 @@ RSpec.describe "Memos", type: :request do
       get edit_memo_path(memo)
       expect(response).to have_http_status(:ok)
     end
+  end
 
     it "他のユーザーのメモの編集画面は表示できない" do
       other_user = create(:user)
@@ -90,5 +92,4 @@ RSpec.describe "Memos", type: :request do
       expect(other_memo.reload.content).not_to eq "更新後のメモ"
     end
   end
-end
 end
