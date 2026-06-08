@@ -3,7 +3,7 @@ require "rails_helper"
 RSpec.describe "Memos", type: :request do
   let(:user) { create(:user) } # テストの前にログイン状態にする処理
 
-  before do # テストの前にログイン状態にする処理
+  before do # テスト用のユーザーを作成
     sign_in user
   end
 
