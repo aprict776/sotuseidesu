@@ -1,9 +1,38 @@
-<div class="flex h-screen">
-  <%# メモ投稿・一覧エリア %>
-  <div class="flex-1 flex flex-col p-6 overflow-y-auto">
+<div class="flex h-screen overflow-hidden" data-controller="creation">
 
-    <%# メモ投稿フォーム %>
+  <%# 左パネル：作品一覧 %>
+  <div class="w-64 bg-gray-700 text-white flex flex-col">
+
+    <%# ユーザー名 %>
+    <div class="px-4 py-3 border-b border-gray-600">
+      <span class="font-bold"><%= current_user.name %></span>
+    </div>
+
+    <%# 作品一覧ヘッダー %>
+    <div class="flex justify-between items-center px-4 py-3 border-b border-gray-600">
+      <span class="text-sm text-gray-300">作品一覧</span>
+
+      <%= form_with url: creations_path, class: "flex items-center gap-1" do |f| %>
+        <%= hidden_field_tag :creation_id, params[:creation_id] %>
+        <%= f.text_field :title,name: "creation[title]",placeholder: "新しい作品",class: "w-24 px-2 py-1 rounded bg-gray-600 text-white text-xs" %>
+        <%= f.submit "+", class: "bg-gray-500 px-2 py-1 rounded cursor-pointer" %>
+      <% end %>
+    </div>
+
+    <%# 作品一覧 %>
+    <div class="flex-1 overflow-y-auto">
+      <% @creations.each do |creation| %>
+       <%= render creation %>  <%# _creation.html.erb（パーシャファイル）を呼び出す %>
+      <% end %>
+    </div>
+  </div>  <%# ← 左パネルここで閉じる %>
+
+  <%# メモ投稿・一覧エリア %>
+  <div class="flex-1 flex flex-col p-6 overflow-y-auto scrollbar-hide">
+
     <%= form_with model: @memo, url: memos_path do |f| %>
+    <%= hidden_field_tag :creation_id, params[:creation_id] %>  <%# ID %>
+      <%# メモ投稿フォーム %>
       <div class="mb-4">
         <%= f.text_area :content, rows: 4,
             placeholder: "アイデアをメモしよう...",
@@ -14,7 +43,7 @@
       </div>
     <% end %>
 
-     <%# メモ削除 編集%>
+    <%# メモ一覧 %>
     <div class="mt-6 flex flex-col gap-4">
       <% @memos.each do |memo| %>
         <div class="bg-stone-100 rounded-lg p-4">
@@ -22,11 +51,22 @@
           <div class="flex justify-end items-center gap-4 mt-3">
             <%= link_to "編集", edit_memo_path(memo), class: "text-gray-500 text-sm" %>
             <%= link_to "削除", memo_path(memo),
-            data: { turbo_method: :delete, turbo_confirm: "削除しますか？" },
-            class: "text-gray-500 text-sm" %>
+              data: { turbo_method: :delete, turbo_confirm: "削除しますか？" },
+              class: "text-gray-500 text-sm" %>
           </div>
         </div>
       <% end %>
     </div>
   </div>
+
+  <%# 右パネル：プロットブロック（今後実装） %>
+  <div class="w-72 bg-stone-200 flex flex-col">
+    <div class="px-4 py-3 border-b border-stone-300 font-bold" data-creation-target="title">
+      <%= @selected_creation ? @selected_creation.title : "プロット" %>
+    </div>
+    <div class="flex-1 overflow-y-auto p-4">
+      <p class="text-gray-500 text-sm">作品を選択してください</p>
+    </div>
+  </div>
+
 </div>
