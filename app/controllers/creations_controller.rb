@@ -1,5 +1,5 @@
 class CreationsController < ApplicationController
-  before_action :set_creation, only: [:destroy]
+  before_action :set_creation, only: [ :destroy ]
 
   def create
     @creation = current_user.creations.build(creation_params)
@@ -7,7 +7,7 @@ class CreationsController < ApplicationController
       # creation_idパラメータを保持したままリダイレクト
       redirect_to memos_path(creation_id: params[:creation_id]), notice: "作品を作成しました"
     else
-      redirect_to memos_path(creation_id: params[:creation_id]), alert: @creation.errors.full_messages.first # 
+      redirect_to memos_path(creation_id: params[:creation_id]), alert: @creation.errors.full_messages.first #
     end
   end
 

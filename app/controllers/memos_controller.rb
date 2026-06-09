@@ -1,5 +1,5 @@
 class MemosController < ApplicationController
-  before_action :set_memo, only: [:edit, :update, :destroy]
+  before_action :set_memo, only: [ :edit, :update, :destroy ]
 
   def index
     @memos = current_user.memos.order(created_at: :desc)
@@ -26,7 +26,7 @@ class MemosController < ApplicationController
       redirect_to memos_path(creation_id: params[:creation_id]), notice: "メモを更新しました"
     else
       @memos = current_user.memos.order(created_at: :desc)
-      @creations = current_user.creations.order(created_at: :desc) 
+      @creations = current_user.creations.order(created_at: :desc)
       render :index, status: :unprocessable_entity
     end
   end
