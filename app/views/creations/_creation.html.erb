@@ -1,0 +1,10 @@
+<%# 作品 %>
+<div class="flex justify-between items-start px-4 py-3 hover:bg-gray-600 gap-2 cursor-pointer"
+     data-action="click->creation#select"
+     data-title="<%= creation.title %>"
+     data-id="<%= creation.id %>">
+  <span class="text-sm break-all"><%= creation.title %></span>
+  <%= link_to "削除", creation_path(creation),
+    data: { turbo_method: :delete, turbo_confirm: "削除しますか？" },
+    class: "text-gray-400 text-xs shrink-0" %>
+</div>
