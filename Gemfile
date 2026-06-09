@@ -25,7 +25,7 @@ gem "devise"
 # ページネーション
 gem "kaminari", "~> 1.2.1"
 
-gem "config", "4.0.0"
+gem "config", "5.6.1"
 
 # テストファイル
 
