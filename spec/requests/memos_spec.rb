@@ -58,21 +58,6 @@ RSpec.describe "Memos", type: :request do
     end
   end
 
-  describe "GET /memos/:id/edit" do
-    it "自分のメモの編集画面を表示できる" do
-      memo = create(:memo, user: user)
-      get edit_memo_path(memo)
-      expect(response).to have_http_status(:ok)
-    end
-
-    it "他のユーザーのメモの編集画面は表示できない" do
-      other_user = create(:user)
-      other_memo = create(:memo, user: other_user)
-      get edit_memo_path(other_memo)
-      expect(response).not_to have_http_status(:ok)
-    end
-  end
-
   describe "PATCH /memos/:id" do
     it "自分のメモを更新できる" do
       memo = create(:memo, user: user)

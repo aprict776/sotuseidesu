@@ -1,0 +1,19 @@
+<%# plot_blockという変数名で1つのブロックを受け取る %>
+<div class="bg-white rounded-lg p-3 mb-3 shadow-sm">
+
+  <%# タイトル（入力されていれば表示） %>
+  <% if plot_block.title.present? %>
+    <p class="font-bold text-sm mb-1"><%= plot_block.title %></p>
+  <% end %>
+
+  <%# 本文 %>
+  <p class="text-sm whitespace-pre-wrap"><%= plot_block.content %></p>
+
+  <%# 削除ボタン %>
+  <div class="flex justify-end mt-2">
+    <%= link_to "削除",
+          creation_plot_block_path(plot_block.creation, plot_block),
+          data: { turbo_method: :delete, turbo_confirm: "削除しますか？" },
+          class: "text-gray-400 text-xs" %>
+  </div>
+</div>
