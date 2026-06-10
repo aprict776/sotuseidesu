@@ -9,3 +9,9 @@ application.register("creation", CreationController)
 
 import HelloController from "./hello_controller"
 application.register("hello", HelloController)
+
+import MemoEditController from "./memo_edit_controller"
+application.register("memo-edit", MemoEditController)
+
+import PlotBlockController from "./plot_block_controller"
+application.register("plot-block", PlotBlockController)

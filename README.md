@@ -456,7 +456,7 @@
 
 ### 画面遷移図 Figma：<https://www.figma.com/design/88ESsY0mj7oWQd8iFH8j29/%E3%83%A1%E3%83%A2%E3%83%83%E3%83%88%E3%82%AF%E3%80%80%E7%94%BB%E9%9D%A2%E9%81%B7%E7%A7%BB%E5%9B%B3?node-id=0-1&t=FG9lgBpe149TQHLW-1>
 
-### ER図 : https://gyazo.com/042b72a74406fb325cbe8e77284999d0
+### ER図 : [![Image from Gyazo](https://i.gyazo.com/042b72a74406fb325cbe8e77284999d0.png)](https://gyazo.com/042b72a74406fb325cbe8e77284999d0)
 
 ※ER図修正：`Creationsテーブル`の`titleカラム`のデータ型を`text型`から`rsting型`へ修正
 `plot_blocksテーブル`に`titleカラム`追加
