@@ -1,6 +1,6 @@
 class MemosController < ApplicationController
   # メモの編集はモーダルとして実装したためeditアクションは削除
-  before_action :set_memo, only: [:update, :destroy ]
+  before_action :set_memo, only: [ :update, :destroy ]
 
   def index
     @memos = current_user.memos.order(created_at: :desc)
