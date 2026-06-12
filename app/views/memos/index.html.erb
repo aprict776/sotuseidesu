@@ -1,4 +1,4 @@
-<div class="flex h-screen overflow-hidden" data-controller="creation">
+<div class="flex h-screen overflow-hidden" data-controller="creation memo-select">
 
   <%# 左パネル：作品一覧 %>
   <div class="w-64 bg-gray-700 text-white flex flex-col">
@@ -14,7 +14,7 @@
 
       <%= form_with url: creations_path, class: "flex items-center gap-1" do |f| %>
         <%= hidden_field_tag :creation_id, params[:creation_id] %>
-        <%= f.text_field :title,name: "creation[title]",placeholder: "新しい作品",class: "w-24 px-2 py-1 rounded bg-gray-600 text-white text-xs" %>
+        <%= f.text_field :title, name: "creation[title]", placeholder: "新しい作品", class: "w-24 px-2 py-1 rounded bg-gray-600 text-white text-xs" %>
         <%= f.submit "+", class: "bg-gray-500 px-2 py-1 rounded cursor-pointer" %>
       <% end %>
     </div>
@@ -22,17 +22,18 @@
     <%# 作品一覧 %>
     <div class="flex-1 overflow-y-auto">
       <% @creations.each do |creation| %>
-       <%= render creation %>  <%# _creation.html.erb（パーシャファイル）を呼び出す %>
+        <%= render creation %>
       <% end %>
     </div>
-  </div>  <%# ← 左パネルここで閉じる %>
 
-  <%# メモ投稿・一覧エリア %>
+  </div><%# 左パネル閉じる %>
+
+  <%# 中央パネル：メモ投稿・一覧エリア %>
   <div class="flex-1 flex flex-col p-6 overflow-y-auto scrollbar-hide">
 
+    <%# メモ投稿フォーム %>
     <%= form_with model: @memo, url: memos_path do |f| %>
-    <%= hidden_field_tag :creation_id, params[:creation_id] %>  <%# ID %>
-      <%# メモ投稿フォーム %>
+      <%= hidden_field_tag :creation_id, params[:creation_id] %>
       <div class="mb-4">
         <%= f.text_area :content, rows: 4,
             placeholder: "アイデアをメモしよう...",
@@ -41,92 +42,101 @@
       <div class="flex justify-end">
         <%= f.submit "メモる", class: "bg-gray-700 text-white px-6 py-2 rounded-full cursor-pointer" %>
       </div>
+
+    <% end %>  <%# ← メモ投稿フォームをここで閉じる %>
+
+    <%# チェックしたメモをブロック化するボタン（右下に固定・最初は非表示） %>
+    <% if @selected_creation %>
+      <div data-memo-select-target="submitArea"
+           class="hidden fixed bottom-6 right-80 z-40">
+        <%= form_with url: bulk_from_memo_creation_plot_blocks_path(@selected_creation), method: :post do |f| %>
+          <div id="memo_id_inputs"></div>
+          <%= f.submit "チェックしたメモをブロックに追加",
+                data: { action: "click->memo-select#submitChecked" },
+                class: "bg-gray-700 text-white text-sm px-4 py-3 rounded-lg shadow-lg cursor-pointer" %>
+        <% end %>
+      </div>
     <% end %>
 
     <%# メモ一覧 %>
-    <%# data-controller="memo-edit" でStimulusコントローラを起動 %>
-      <div class="mt-6 flex flex-col gap-4" data-controller="memo-edit">
-        <%# render collection: で_memo.html.erbを1件ずつ呼び出す %>
-        <%= render partial: "memo", collection: @memos, as: :memo %>
-        <%# 編集モーダルをパーシャルで呼び出す %>
-        <%= render "memo_edit_modal" %>
-      </div>
-    </div>
+    <div class="mt-6 flex flex-col gap-4" data-controller="memo-edit">
+
+      <%# メモカードを1件ずつ_memo.html.erbで描画 %>
+      <%= render partial: "memo",
+                 collection: @memos,
+                 as: :memo,
+                 locals: { creation_id: params[:creation_id] } %>
+
+      <%# メモ編集モーダル %>
+      <%= render "memo_edit_modal" %>
+
+    </div><%# メモ一覧div閉じる %>
+
+  </div><%# 中央パネル閉じる %>
 
   <%# 右パネル：プロットブロック %>
-  <div class="w-72 bg-stone-200 flex flex-col" data-controller="plot-block">
+<div class="w-72 bg-stone-200 flex flex-col" data-controller="plot-block">
 
-  <%# パネルヘッダー %>
+  <%# 右パネルヘッダー %>
   <div class="px-4 py-3 border-b border-stone-300 flex justify-between items-center">
     <span class="font-bold" data-creation-target="title">
       <%= @selected_creation ? @selected_creation.title : "プロット" %>
     </span>
-
     <% if @selected_creation %>
-      <%# + ボタン：クリックでモーダルを開く %>
-      <button data-action="click->plot-block#open"
+      <button data-action="click->plot-block#startSelect"
               class="text-gray-600 text-xl font-light leading-none cursor-pointer">
         ＋
       </button>
     <% end %>
   </div>
 
+  <%# プロットブロック一覧 %>
   <div class="flex-1 overflow-y-auto p-4">
     <% if @selected_creation %>
-
-      <%# プロットブロック一覧 %>
       <%= render partial: "plot_blocks/plot_block",
                  collection: @selected_creation.plot_blocks,
                  as: :plot_block %>
-
       <% if @selected_creation.plot_blocks.empty? %>
         <p class="text-gray-400 text-sm text-center mt-4">まだブロックがありません</p>
       <% end %>
-
     <% else %>
       <p class="text-gray-500 text-sm">作品を選択してください</p>
     <% end %>
   </div>
 
-  <%# モーダル（最初はhidden） %>
+</div><%# 右パネル閉じる %>
+
+  <%# プロットブロック追加モーダル（最初はhidden） %>
   <% if @selected_creation %>
-    <%# 背景オーバーレイ：クリックで閉じる %>
     <div data-plot-block-target="modal"
          data-action="click->plot-block#closeOnBackdrop"
          class="hidden fixed inset-0 bg-black/40 flex items-center justify-center z-50">
 
-      <%# モーダル本体 %>
       <div class="bg-stone-50 rounded-xl p-8 w-96 shadow-lg">
         <p class="text-lg mb-6">ブロックのタイトル</p>
-        <%= form_with url: creation_plot_blocks_path(@selected_creation), method: :post do |f| %>
 
-          <%# タイトル入力 %>
+        <%= form_with url: creation_plot_blocks_path(@selected_creation), method: :post do |f| %>
           <%= f.text_field :title,
                 name: "plot_block[title]",
                 placeholder: "",
                 autofocus: true,
                 class: "w-full border-b border-gray-400 bg-transparent py-2 text-sm outline-none mb-6" %>
 
-          <%# contentは空文字で送る（後から編集する想定） %>
           <%= f.hidden_field :content, value: "", name: "plot_block[content]" %>
 
           <div class="flex justify-end gap-3">
-            <%# キャンセルボタン %>
             <button type="button"
                     data-action="click->plot-block#close"
                     class="px-4 py-2 text-sm text-gray-600 cursor-pointer">
               キャンセル
             </button>
-
-            <%# 作成ボタン %>
             <%= f.submit "作成",
                   class: "px-6 py-2 bg-gray-700 text-white text-sm rounded-full cursor-pointer" %>
           </div>
-
         <% end %>
       </div>
 
     </div>
   <% end %>
 
-</div>
+</div><%# 全体のflexコンテナ閉じる %>
