@@ -1,14 +1,17 @@
 <% if resource.errors.any? %>
   <div id="error_explanation" data-turbo-temporary>
-    <h2>
+    <%# エラー件数を赤太字で表示 %>
+    <h2 class="text-red-600 font-bold mb-2">
       <%= I18n.t("errors.messages.not_saved",
                  count: resource.errors.count,
                  resource: resource.class.model_name.human.downcase)
        %>
     </h2>
+
+    <%# 各エラーメッセージを赤文字で表示 %>
     <ul>
       <% resource.errors.full_messages.each do |message| %>
-        <li><%= message %></li>
+        <li class="text-red-600"><%= message %></li>
       <% end %>
     </ul>
   </div>

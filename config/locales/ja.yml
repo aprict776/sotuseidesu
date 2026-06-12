@@ -1,0 +1,27 @@
+ja:
+  errors:
+    messages:
+      blank: "を入力してください"
+      not_saved:
+        one: "1件のエラーが発生しました。"
+        other: "%{count}件のエラーが発生しました。"
+
+  activerecord:
+    errors:
+      messages:
+        blank: "を入力してください"
+      # ↓ modelsはerrorsの中に入れる
+      models:
+        user:
+          attributes:
+            email:
+              blank: "を入力してください"
+            password:
+              blank: "を入力してください"
+            name:
+              blank: "を入力してください"
+    attributes:
+      user:
+        email: "メールアドレス"
+        password: "パスワード"
+        name: "ユーザーネーム"
