@@ -1,3 +1,11 @@
+<%# ログイン画面に戻るボタン（左上固定） %>
+<div class="absolute top-6 left-6">
+  <%= link_to new_user_session_path,
+        class: "flex items-center gap-2 bg-gray-700 text-white px-4 py-2 rounded-lg text-sm" do %>
+    ← ログイン画面に戻る
+  <% end %>
+</div>
+
 <div class="flex flex-col items-center justify-center min-h-screen">
   <div class="bg-stone-200 p-8 rounded w-96">
     <%= form_for(resource, as: resource_name, url: registration_path(resource_name)) do |f| %>
