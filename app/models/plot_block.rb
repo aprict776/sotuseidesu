@@ -1,8 +1,9 @@
 class PlotBlock < ApplicationRecord
   belongs_to :creation
 
-  # タイトルのみ必須に変更（本文は後から編集）
-  validates :title, presence: true
+  # from_memoで作成する場合はtitleが空になるため、
+  # titleのバリデーションをcontextで分ける
+  validates :title, presence: true, on: :manual_create
 
   default_scope { order(:position) }
 end

@@ -6,8 +6,10 @@
     <p class="font-bold text-sm mb-1"><%= plot_block.title %></p>
   <% end %>
 
-  <%# 本文 %>
-  <p class="text-sm whitespace-pre-wrap"><%= plot_block.content %></p>
+  <%# 本文：3行以上は「...」で省略 %>
+  <p class="text-sm overflow-hidden line-clamp-3"><%= plot_block.content %></p>
+
+
 
   <%# 削除ボタン %>
   <div class="flex justify-end mt-2">

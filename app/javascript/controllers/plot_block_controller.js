@@ -20,4 +20,11 @@ export default class extends Controller {
       this.close()
     }
   }
+
+  // + ボタン：memo-selectにチェックモード開始を通知する
+  startSelect() {
+    // ページ全体に向けてカスタムイベントを発火する
+    // memo-selectコントローラがこれを受け取る
+    window.dispatchEvent(new CustomEvent("memo-select:start"))
+  }
 }

@@ -13,5 +13,8 @@ application.register("hello", HelloController)
 import MemoEditController from "./memo_edit_controller"
 application.register("memo-edit", MemoEditController)
 
+import MemoSelectController from "./memo_select_controller"
+application.register("memo-select", MemoSelectController)
+
 import PlotBlockController from "./plot_block_controller"
 application.register("plot-block", PlotBlockController)
