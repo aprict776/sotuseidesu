@@ -1,5 +1,7 @@
-<%# plot_blockという変数名で1つのブロックを受け取る %>
-<div class="bg-white rounded-lg p-3 mb-3 shadow-sm">
+<%# dom_idで「plot_block_1」のようなユニークなidを付与 %>
+<div id="<%= dom_id(plot_block) %>"
+     class="bg-white rounded-lg p-3 mb-3 shadow-sm">
+
 
   <%# タイトル（入力されていれば表示） %>
   <% if plot_block.title.present? %>

@@ -1,5 +1,7 @@
 <%# 個々のメモカード %>
 <%# memo, creation_id を受け取る %>
+<%# dom_idで「memo_1」のようなユニークなidを付与する（Turboが要素を特定するために必須） %>
+<div id="<%= dom_id(memo) %>"
 <div class="bg-stone-100 rounded-lg p-4" data-action="click->memo-select#toggle">
 
   <%# チェックボックスエリア（最初は非表示、+ボタンで表示） %>

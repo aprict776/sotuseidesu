@@ -1,5 +1,5 @@
 class MemosController < ApplicationController
-  # メモの編集はモーダルとして実装したためeditアクションは削除
+  # update・destroyの前にset_memoを実行してメモを取得
   before_action :set_memo, only: [ :update, :destroy ]
 
   def index
@@ -12,10 +12,19 @@ class MemosController < ApplicationController
   def create
     @memo = current_user.memos.build(memo_params)
     if @memo.save
-      # creation_idを保持したままリダイレクト
-      redirect_to memos_path(creation_id: params[:creation_id]), notice: "メモを投稿しました"
+      respond_to do |format|
+        format.turbo_stream do
+          # メモ一覧の先頭（#memosの中）に新しいメモカードを追加
+          render turbo_stream: turbo_stream.prepend(
+            "memos",
+            partial: "memo",
+            locals: { memo: @memo, creation_id: params[:creation_id] }
+          )
+        end
+        format.html { redirect_to memos_path(creation_id: params[:creation_id]) }
+      end
     else
-      @memos = current_user.memos.order(created_at: :desc)
+      @memos     = current_user.memos.order(created_at: :desc)
       @creations = current_user.creations.order(created_at: :desc)
       render :index, status: :unprocessable_entity
     end
@@ -23,10 +32,19 @@ class MemosController < ApplicationController
 
   def update
     if @memo.update(memo_params)
-      # creation_idを保持したままリダイレクト
-      redirect_to memos_path(creation_id: params[:creation_id]), notice: "メモを更新しました"
+      respond_to do |format|
+        format.turbo_stream do
+          # 対象メモのカードだけを更新内容に差し替え
+          render turbo_stream: turbo_stream.replace(
+            @memo,
+            partial: "memo",
+            locals: { memo: @memo, creation_id: params[:creation_id] }
+          )
+        end
+        format.html { redirect_to memos_path(creation_id: params[:creation_id]) }
+      end
     else
-      @memos = current_user.memos.order(created_at: :desc)
+      @memos     = current_user.memos.order(created_at: :desc)
       @creations = current_user.creations.order(created_at: :desc)
       render :index, status: :unprocessable_entity
     end
@@ -34,8 +52,13 @@ class MemosController < ApplicationController
 
   def destroy
     @memo.destroy
-    # creation_idを保持したままリダイレクト
-    redirect_to memos_path(creation_id: params[:creation_id]), notice: "メモを削除しました"
+    respond_to do |format|
+      format.turbo_stream do
+        # 削除したメモのDOM要素だけを取り除く
+        render turbo_stream: turbo_stream.remove(@memo)
+      end
+      format.html { redirect_to memos_path(creation_id: params[:creation_id]) }
+    end
   end
 
   private
@@ -47,4 +70,5 @@ class MemosController < ApplicationController
   def memo_params
     params.require(:memo).permit(:content)
   end
+
 end
