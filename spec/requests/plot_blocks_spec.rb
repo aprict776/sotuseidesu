@@ -44,15 +44,15 @@ RSpec.describe "PlotBlocks", type: :request do
     end
   end
 
-  # ↓ describeブロックが丸ごと消えていたので復元
-  it "自分の作品のブロックを削除できる" do
-  plot_block = create(:plot_block, creation: creation)
-  puts "current user id: #{user.id}"
-  puts "creation user_id: #{creation.reload.user_id}"
-  puts "plot_block id: #{plot_block.id}"
-  puts "creation id: #{creation.id}"
-  delete creation_plot_block_path(creation, plot_block)
-  puts "status: #{response.status}"
+  describe "DELETE /creations/:creation_id/plot_blocks/:id" do
+    it "自分の作品のブロックを削除できる" do
+    plot_block = create(:plot_block, creation: creation)
+    puts "current user id: #{user.id}"
+    puts "creation user_id: #{creation.reload.user_id}"
+    puts "plot_block id: #{plot_block.id}"
+    puts "creation id: #{creation.id}"
+    delete creation_plot_block_path(creation, plot_block)
+    puts "status: #{response.status}"
   end
 
     it "HTMLリクエストの場合はmemos_pathにリダイレクトされる" do
@@ -139,21 +139,21 @@ RSpec.describe "PlotBlocks", type: :request do
     it "チェックしたメモをまとめてブロック化できる" do
       expect {
         post bulk_from_memo_creation_plot_blocks_path(creation),
-          params: { memo_ids: [memo1.id, memo2.id] }
+          params: { memo_ids: [ memo1.id, memo2.id ] }
       }.to change(PlotBlock, :count).by(2)
     end
 
     it "positionが連番で割り当てられる" do
       post bulk_from_memo_creation_plot_blocks_path(creation),
-        params: { memo_ids: [memo1.id, memo2.id] }
+        params: { memo_ids: [ memo1.id, memo2.id ] }
       positions = creation.plot_blocks.order(:position).pluck(:position)
-      expect(positions).to eq [1, 2]
+      expect(positions).to eq [ 1, 2 ]
     end
 
     it "MemoCreationがメモの数だけ作成される" do
       expect {
         post bulk_from_memo_creation_plot_blocks_path(creation),
-          params: { memo_ids: [memo1.id, memo2.id] }
+          params: { memo_ids: [ memo1.id, memo2.id ] }
       }.to change(MemoCreation, :count).by(2)
     end
 
@@ -166,7 +166,7 @@ RSpec.describe "PlotBlocks", type: :request do
 
     it "Turbo Streamリクエストの場合はturbo_streamを返す" do
       post bulk_from_memo_creation_plot_blocks_path(creation),
-        params: { memo_ids: [memo1.id, memo2.id] },
+        params: { memo_ids: [ memo1.id, memo2.id ] },
         headers: { "Accept" => "text/vnd.turbo-stream.html" }
       expect(response.media_type).to eq "text/vnd.turbo-stream.html"
     end
