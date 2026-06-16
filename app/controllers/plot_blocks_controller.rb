@@ -1,5 +1,6 @@
 class PlotBlocksController < ApplicationController
-  before_action :set_creation
+  before_action :set_creation, only: [ :create, :from_memo, :bulk_from_memo ]
+  before_action :set_plot_block, only: [ :edit, :update, :destroy ]
 
   def create
     @plot_block = @creation.plot_blocks.build(plot_block_params)
@@ -8,7 +9,6 @@ class PlotBlocksController < ApplicationController
     if @plot_block.save
       respond_to do |format|
         format.turbo_stream do
-          # 右パネルの#plot_blocksの末尾に新しいブロックを追加
           render turbo_stream: turbo_stream.append(
             "plot_blocks",
             partial: "plot_blocks/plot_block",
@@ -25,14 +25,44 @@ class PlotBlocksController < ApplicationController
     end
   end
 
-  def destroy
-    # ログインユーザーの作品に紐づくブロックのみ削除可能（セキュリティ対策）
-    @plot_block = @creation.plot_blocks.find(params[:id])
+  def update
+    if @plot_block.update(plot_block_params)
+      respond_to do |format|
+        format.turbo_stream do
+          # 執筆画面での保存ボタン用：ページ遷移なしで通知のみ更新
+          render turbo_stream: turbo_stream.replace(
+            "notice",
+            partial: "plot_blocks/notice",
+            locals: { message: "保存しました" }
+          )
+        end
+        format.html do
+          # 戻るボタン経由のfetch用：flashをセットしてリダイレクト
+          flash[:notice] = "保存しました"
+          redirect_to memos_path(creation_id: @creation.id)
+        end
+      end
+    else
+      respond_to do |format|
+        format.turbo_stream do
+          render turbo_stream: turbo_stream.replace(
+            "notice",
+            partial: "plot_blocks/notice",
+            locals: { message: "保存に失敗しました" }
+          )
+        end
+        format.html do
+          flash[:alert] = "保存に失敗しました"
+          redirect_to memos_path(creation_id: @creation.id)
+        end
+      end
+    end
+  end
 
+  def destroy
     if @plot_block.destroy
       respond_to do |format|
         format.turbo_stream do
-          # 削除したブロックのDOM要素を画面から取り除く
           render turbo_stream: turbo_stream.remove(@plot_block)
         end
         format.html { redirect_to memos_path(creation_id: @creation.id) }
@@ -58,7 +88,6 @@ class PlotBlocksController < ApplicationController
 
       respond_to do |format|
         format.turbo_stream do
-          # 右パネルの#plot_blocksの末尾に追加
           render turbo_stream: turbo_stream.append(
             "plot_blocks",
             partial: "plot_blocks/plot_block",
@@ -123,14 +152,21 @@ class PlotBlocksController < ApplicationController
           )
         }
       end
-      # ↓ format.htmlの中にredirect_toを移動
       format.html { redirect_to memos_path(creation_id: @creation.id), notice: "プロットに追加しました" }
     end
-  end  # ← bulk_from_memoを閉じるendが必要
+  end
+
   private
 
   def set_creation
     @creation = current_user.creations.find(params[:creation_id])
+  end
+
+  def set_plot_block
+    @plot_block = PlotBlock.joins(:creation)
+                           .where(creations: { user_id: current_user.id })
+                           .find(params[:id])
+    @creation = @plot_block.creation
   end
 
   def plot_block_params

@@ -1,3 +1,20 @@
+<% if flash[:notice].present? %>
+  <div id="index-notice"
+       class="fixed top-6 right-8 bg-gray-500 text-white text-sm px-6 py-3 rounded-lg shadow-lg
+              transition-opacity duration-500">
+    <%= flash[:notice] %>
+  </div>
+
+  <script>
+    // 3秒後にフェードアウト
+    const notice = document.getElementById("index-notice");
+    setTimeout(() => {
+      notice.style.opacity = "0";
+      setTimeout(() => { notice.style.display = "none"; }, 500);
+    }, 3000);
+  </script>
+<% end %>
+
 <div class="flex h-screen overflow-hidden" data-controller="creation memo-select plot-block">
 
   <%# 左パネル：作品一覧 %>
