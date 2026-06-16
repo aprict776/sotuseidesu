@@ -1,0 +1,15 @@
+<%# 右上固定・数秒後に自動で消える通知 %>
+<div id="notice"
+     class="fixed top-6 right-8 bg-gray-500 text-white text-sm px-6 py-3 rounded-lg shadow-lg
+            transition-opacity duration-500">
+  <%= message %>
+</div>
+
+<script>
+  // 表示後3秒でフェードアウトして非表示にする
+  const notice = document.getElementById("notice");
+  setTimeout(() => {
+    notice.style.opacity = "0";
+    setTimeout(() => { notice.style.display = "none"; }, 500);
+  }, 3000);
+</script>

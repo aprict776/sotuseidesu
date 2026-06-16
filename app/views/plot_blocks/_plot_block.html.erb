@@ -2,22 +2,25 @@
 <div id="<%= dom_id(plot_block) %>"
      class="bg-white rounded-lg p-3 mb-3 shadow-sm">
 
+  <%# ブロック全体をクリックで執筆画面へ遷移するリンク %>
+  <%= link_to edit_plot_block_path(plot_block), class: "block mb-2" do %>
 
-  <%# タイトル（入力されていれば表示） %>
-  <% if plot_block.title.present? %>
-    <p class="font-bold text-sm mb-1"><%= plot_block.title %></p>
-  <% end %>
+    <%# タイトル（入力されていれば表示） %>
+    <% if plot_block.title.present? %>
+      <p class="font-bold text-sm mb-1"><%= plot_block.title %></p>
+    <% end %>
 
-  <%# 本文：3行以上は「...」で省略 %>
-  <p class="text-sm overflow-hidden line-clamp-3"><%= plot_block.content %></p>
+    <%# 本文：3行以上は「...」で省略 %>
+    <p class="text-sm overflow-hidden line-clamp-3"><%= plot_block.content %></p>
 
-
+  <% end %><%# link_toを閉じる %>
 
   <%# 削除ボタン %>
   <div class="flex justify-end mt-2">
     <%= link_to "削除",
-          creation_plot_block_path(plot_block.creation, plot_block),
+          plot_block_path(plot_block),
           data: { turbo_method: :delete, turbo_confirm: "削除しますか？" },
           class: "text-gray-400 text-xs" %>
   </div>
+
 </div>
