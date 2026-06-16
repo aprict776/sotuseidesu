@@ -55,7 +55,9 @@ export default class extends Controller {
       container.appendChild(tokenInput)
     }
 
-    form.submit()
+      // form.submit() → form.requestSubmit() に変更
+      // requestSubmit()はTurboが検知できる正規の送信イベントを発火させる
+    form.requestSubmit()
   }
 
     // コントローラが接続されたときにイベントを登録
