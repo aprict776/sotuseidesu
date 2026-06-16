@@ -1,10 +1,9 @@
-<%# 個々のメモカード %>
-<%# memo, creation_id を受け取る %>
-<%# dom_idで「memo_1」のようなユニークなidを付与する（Turboが要素を特定するために必須） %>
+<%# dom_idとclassを1つのdivにまとめる %>
 <div id="<%= dom_id(memo) %>"
-<div class="bg-stone-100 rounded-lg p-4" data-action="click->memo-select#toggle">
+     class="bg-stone-100 rounded-lg p-4"
+     data-action="click->memo-select#toggle">
 
-  <%# チェックボックスエリア（最初は非表示、+ボタンで表示） %>
+  <%# チェックボックスエリア（最初は非表示） %>
   <div data-memo-select-target="checkboxArea" class="hidden flex justify-end mb-2">
     <input type="checkbox"
            value="<%= memo.id %>"
@@ -18,12 +17,13 @@
   <%# 操作ボタン %>
   <div class="flex justify-end items-center gap-4 mt-3">
 
-    <%# 作品選択中は青いボタン、未選択時はグレーで非活性 %>
     <% if creation_id.present? %>
+      <%# data: { turbo: true } でTurbo Streamのレスポンスを受け取れるようにする %>
       <%= button_to "プロットに追加",
             from_memo_creation_plot_blocks_path(creation_id),
             params: { memo_id: memo.id },
             method: :post,
+            data: { turbo: true },
             class: "text-blue-500 text-sm cursor-pointer bg-transparent border-none" %>
     <% else %>
       <span class="text-gray-300 text-sm">プロットに追加</span>

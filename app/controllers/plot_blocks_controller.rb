@@ -25,6 +25,26 @@ class PlotBlocksController < ApplicationController
     end
   end
 
+  def destroy
+    # ログインユーザーの作品に紐づくブロックのみ削除可能（セキュリティ対策）
+    @plot_block = @creation.plot_blocks.find(params[:id])
+
+    if @plot_block.destroy
+      respond_to do |format|
+        format.turbo_stream do
+          # 削除したブロックのDOM要素を画面から取り除く
+          render turbo_stream: turbo_stream.remove(@plot_block)
+        end
+        format.html { redirect_to memos_path(creation_id: @creation.id) }
+      end
+    else
+      respond_to do |format|
+        format.turbo_stream { head :unprocessable_entity }
+        format.html { redirect_to memos_path(creation_id: @creation.id), alert: "削除に失敗しました" }
+      end
+    end
+  end
+
   def from_memo
     memo = current_user.memos.find(params[:memo_id])
     @plot_block = @creation.plot_blocks.build(
@@ -64,8 +84,6 @@ class PlotBlocksController < ApplicationController
     end
 
     memos = current_user.memos.where(id: memo_ids)
-
-    # positionの最大値はループ外で1回だけ取得
     current_max_position = @creation.plot_blocks.maximum(:position).to_i
 
     plot_blocks_data = memos.map.with_index(1) do |memo, i|
@@ -79,7 +97,6 @@ class PlotBlocksController < ApplicationController
       }
     end
 
-    # 一括INSERT（ループで1件ずつsaveより高速）
     PlotBlock.insert_all(plot_blocks_data)
 
     memo_creation_data = memos.map do |memo|
@@ -92,24 +109,24 @@ class PlotBlocksController < ApplicationController
     end
     MemoCreation.insert_all(memo_creation_data)
 
-    # bulk_from_memoは複数ブロックを一気に追加するため
-    # ページリロードで右パネルをまとめて更新する（Turbo対応は複雑なため）
-    redirect_to memos_path(creation_id: @creation.id), notice: "プロットに追加しました"
-  end
-
-  def destroy
-    @plot_block = @creation.plot_blocks.find(params[:id])
-    @plot_block.destroy
-
     respond_to do |format|
       format.turbo_stream do
-        # 削除したブロックのDOM要素だけ取り除く
-        render turbo_stream: turbo_stream.remove(@plot_block)
-      end
-      format.html { redirect_to memos_path(creation_id: @creation.id) }
-    end
-  end
+        new_blocks = @creation.plot_blocks
+                               .where("position > ?", current_max_position)
+                               .order(:position)
 
+        render turbo_stream: new_blocks.map { |block|
+          turbo_stream.append(
+            "plot_blocks",
+            partial: "plot_blocks/plot_block",
+            locals: { plot_block: block }
+          )
+        }
+      end
+      # ↓ format.htmlの中にredirect_toを移動
+      format.html { redirect_to memos_path(creation_id: @creation.id), notice: "プロットに追加しました" }
+    end
+  end  # ← bulk_from_memoを閉じるendが必要
   private
 
   def set_creation
