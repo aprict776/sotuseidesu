@@ -78,6 +78,7 @@
     fetch(form.action, {
       method: "PATCH",
       body: new FormData(form),
+      redirect: "manual", // リダイレクトを自動追跡させず、ホーム画面の二重読み込みを防ぐ
       headers: {
         "X-CSRF-Token": document.querySelector('meta[name="csrf-token"]').content,
         // HTMLレスポンスを明示することでformat.htmlが呼ばれflash[:notice]が渡される
