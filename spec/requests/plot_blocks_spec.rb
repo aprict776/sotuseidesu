@@ -44,27 +44,24 @@ RSpec.describe "PlotBlocks", type: :request do
     end
   end
 
-  describe "DELETE /creations/:creation_id/plot_blocks/:id" do
+  describe "DELETE /plot_blocks/:id" do
     it "自分の作品のブロックを削除できる" do
-    plot_block = create(:plot_block, creation: creation)
-    puts "current user id: #{user.id}"
-    puts "creation user_id: #{creation.reload.user_id}"
-    puts "plot_block id: #{plot_block.id}"
-    puts "creation id: #{creation.id}"
-    delete creation_plot_block_path(creation, plot_block)
-    puts "status: #{response.status}"
-  end
+      plot_block = create(:plot_block, creation: creation)
+      expect {
+        delete plot_block_path(plot_block)
+      }.to change(PlotBlock, :count).by(-1)
+    end
 
     it "HTMLリクエストの場合はmemos_pathにリダイレクトされる" do
       plot_block = create(:plot_block, creation: creation)
-      delete creation_plot_block_path(creation, plot_block),
+      delete plot_block_path(plot_block),
         headers: { "Accept" => "text/html" }
       expect(response).to redirect_to(memos_path(creation_id: creation.id))
     end
 
     it "Turbo Streamリクエストの場合はturbo_streamを返す" do
       plot_block = create(:plot_block, creation: creation)
-      delete creation_plot_block_path(creation, plot_block),
+      delete plot_block_path(plot_block),
         headers: { "Accept" => "text/vnd.turbo-stream.html" }
       expect(response.media_type).to eq "text/vnd.turbo-stream.html"
     end
@@ -74,7 +71,7 @@ RSpec.describe "PlotBlocks", type: :request do
       other_creation = create(:creation, user: other_user)
       other_plot_block = create(:plot_block, creation: other_creation)
       expect {
-        delete creation_plot_block_path(other_creation, other_plot_block)
+        delete plot_block_path(other_plot_block)
       }.not_to change(PlotBlock, :count)
     end
   end
