@@ -20,10 +20,8 @@
   <%# 左パネル：作品一覧 %>
   <div class="w-64 bg-gray-700 text-white flex flex-col">
 
-    <%# ユーザー名 %>
-    <div class="px-4 py-3 border-b border-gray-600">
-      <span class="font-bold"><%= current_user.name %></span>
-    </div>
+    <%# ユーザーアイコン（クリックでログアウトメニュー表示） %>
+    <%= render "layouts/user_menu" %>
 
     <%# 作品一覧ヘッダー %>
     <div class="flex justify-between items-center px-4 py-3 border-b border-gray-600">

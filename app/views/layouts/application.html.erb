@@ -20,15 +20,6 @@
   </head>
 
   <body>
-    <% if user_signed_in? %>
-      <header class="bg-gray-700 text-white px-6 py-3 flex justify-between items-center">
-        <span><%= current_user.name %></span>
-        <%= link_to "ログアウト", destroy_user_session_path,
-            data: { turbo_method: :delete },
-            class: "text-sm bg-gray-500 px-3 py-1 rounded" %>
-      </header>
-    <% end %>
-
     <% if alert %>
       <p class="text-red-600 text-center py-2"><%= alert %></p>
     <% end %>

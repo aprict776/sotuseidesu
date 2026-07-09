@@ -1,0 +1,20 @@
+<%# ユーザーアイコン：クリックでログアウトメニューの表示/非表示を切り替える %>
+<div class="relative px-4 py-3 border-b border-gray-600" data-controller="user-menu">
+  <button type="button"
+          data-action="click->user-menu#toggle"
+          class="flex items-center gap-2 w-full cursor-pointer">
+    <%# アイコン代わりに名前の先頭1文字を丸バッジで表示 %>
+    <span class="w-8 h-8 rounded-full bg-gray-500 flex items-center justify-center text-sm font-bold shrink-0">
+      <%= current_user.name[0] %>
+    </span>
+    <span class="font-bold text-sm truncate"><%= current_user.name %></span>
+  </button>
+
+  <%# ログアウトメニュー（初期状態は非表示） %>
+  <div data-user-menu-target="menu"
+       class="hidden absolute left-4 top-full mt-1 bg-gray-600 rounded shadow-lg z-10 overflow-hidden">
+    <%= link_to "ログアウト", destroy_user_session_path,
+        data: { turbo_method: :delete },
+        class: "block text-sm text-white px-4 py-2 hover:bg-gray-500 whitespace-nowrap" %>
+  </div>
+</div>
