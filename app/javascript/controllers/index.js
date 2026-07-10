@@ -18,3 +18,6 @@ application.register("memo-select", MemoSelectController)
 
 import PlotBlockController from "./plot_block_controller"
 application.register("plot-block", PlotBlockController)
+
+import UserMenuController from "./user_menu_controller"
+application.register("user-menu", UserMenuController)

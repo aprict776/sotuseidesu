@@ -5,9 +5,8 @@
 
   <%# 左パネル %>
   <div class="w-64 bg-gray-700 text-white flex flex-col">
-    <div class="px-4 py-3 border-b border-gray-600">
-      <span class="font-bold"><%= current_user.name %></span>
-    </div>
+    <%# ユーザーアイコン（クリックでログアウトメニュー表示） %>
+    <%= render "layouts/user_menu" %>
     <div class="flex justify-between items-center px-4 py-3 border-b border-gray-600">
       <span class="text-sm text-gray-300">作品一覧</span>
       <%= form_with url: creations_path, class: "flex items-center gap-1" do |f| %>
